@@ -2,6 +2,7 @@ package com.example.androidlesson1.user.network;
 
 import com.example.androidlesson1.account.network.AccountApi;
 import com.example.androidlesson1.constants.Urls;
+import com.example.androidlesson1.interceptor.JWTInterceptor;
 
 import java.util.concurrent.TimeUnit;
 
@@ -19,6 +20,7 @@ public class UserService {
                 .connectTimeout(20, TimeUnit.SECONDS)
                 .writeTimeout(20, TimeUnit.SECONDS)
                 .readTimeout(30, TimeUnit.SECONDS)
+                .addInterceptor(new JWTInterceptor())
                 .build();
         retrofit = new Retrofit.Builder()
                 .client(okHttpClient)

@@ -11,14 +11,18 @@ import android.util.Base64;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.example.androidlesson1.BaseActivity;
+import com.example.androidlesson1.MainActivity;
 import com.example.androidlesson1.R;
 import com.example.androidlesson1.account.dto.AccountResponseDTO;
 import com.example.androidlesson1.account.dto.RegisterDTO;
 import com.example.androidlesson1.account.network.AccountService;
+import com.example.androidlesson1.application.HomeApplication;
 import com.example.androidlesson1.constants.Urls;
 import com.example.androidlesson1.image.ImageService;
 import com.example.androidlesson1.image.dto.ImageDTO;
 import com.example.androidlesson1.image.dto.ImageResponseDTO;
+import com.example.androidlesson1.security.JwtSecurityService;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -29,7 +33,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends BaseActivity {
 
     ImageView previewImageView;
 
@@ -85,6 +89,10 @@ public class RegisterActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(Call<AccountResponseDTO> call, Response<AccountResponseDTO> response) {
                             AccountResponseDTO data = response.body();
+                            JwtSecurityService jwtService = (JwtSecurityService) HomeApplication.getInstance();
+                            jwtService.saveJwtToken(data.getToken());
+                            Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                            startActivity(intent);
                         }
 
                         @Override

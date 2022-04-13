@@ -15,12 +15,15 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.android.volley.toolbox.NetworkImageView;
+import com.example.androidlesson1.account.LoginActivity;
 import com.example.androidlesson1.account.RegisterActivity;
+import com.example.androidlesson1.application.HomeApplication;
 import com.example.androidlesson1.constants.Urls;
 import com.example.androidlesson1.network.ImageRequester;
 import com.example.androidlesson1.image.ImageService;
 import com.example.androidlesson1.image.dto.ImageDTO;
 import com.example.androidlesson1.image.dto.ImageResponseDTO;
+import com.example.androidlesson1.security.JwtSecurityService;
 import com.example.androidlesson1.user.UserActivity;
 
 import java.io.ByteArrayOutputStream;
@@ -31,7 +34,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity  {
 
     private ImageRequester imageRequester;
     private NetworkImageView myImage;
@@ -58,29 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu){
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_main, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        Intent intent;
-        switch (item.getItemId()){
-            case R.id.m_register:
-                intent = new Intent(this, RegisterActivity.class);
-                startActivity(intent);
-                return true;
-            case R.id.m_users:
-                intent = new Intent(this, UserActivity.class);
-                startActivity(intent);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 
     public void onSelectPhoto(View view){
         imageChooser();
