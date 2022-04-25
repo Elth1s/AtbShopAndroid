@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.example.androidlesson1.BaseActivity;
@@ -59,6 +60,7 @@ public class LoginActivity extends BaseActivity {
                             JwtSecurityService jwtService = (JwtSecurityService) HomeApplication.getInstance();
                             jwtService.saveJwtToken(data.getToken());
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+
                             startActivity(intent);
                         }
 

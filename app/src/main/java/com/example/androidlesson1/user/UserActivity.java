@@ -1,25 +1,22 @@
 package com.example.androidlesson1.user;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.opengl.Visibility;
 import android.os.Bundle;
-import android.view.View;
+import android.widget.Toast;
 
 import com.example.androidlesson1.BaseActivity;
-import com.example.androidlesson1.MainActivity;
 import com.example.androidlesson1.R;
 import com.example.androidlesson1.account.LoginActivity;
 import com.example.androidlesson1.application.HomeApplication;
 import com.example.androidlesson1.security.JwtSecurityService;
+import com.example.androidlesson1.user.card.CardAdapter;
 import com.example.androidlesson1.user.dto.UserDTO;
 import com.example.androidlesson1.user.network.UserService;
 import com.example.androidlesson1.utils.CommonUtils;
-import com.google.android.material.progressindicator.CircularProgressIndicator;
 
 import java.util.List;
 
@@ -59,7 +56,9 @@ public class UserActivity extends BaseActivity {
                         @Override
                         public void onResponse(Call<List<UserDTO>> call, Response<List<UserDTO>> response) {
                             RecyclerView.Adapter mAdapter;
-                            mAdapter = new CardAdapter(response.body());
+                            mAdapter = new CardAdapter(response.body(),
+                                    UserActivity.this::onClickByItem,
+                                    UserActivity.this::onClickEditItem);
                             mRecyclerView.setAdapter(mAdapter);
                             CommonUtils.hideLoading();
                         }
@@ -73,5 +72,21 @@ public class UserActivity extends BaseActivity {
 
 
         }
+    }
+
+    private void onClickByItem(UserDTO user){
+        Intent intent = new Intent(UserActivity.this,UserPageActivity.class);
+        Bundle b = new Bundle();
+        b.putInt("id", user.getId());
+        intent.putExtras(b);
+        startActivity(intent);
+    }
+
+    private void onClickEditItem(UserDTO user){
+        Intent intent = new Intent(UserActivity.this,EditUserActivity.class);
+        Bundle b = new Bundle();
+        b.putInt("id", user.getId());
+        intent.putExtras(b);
+        startActivity(intent);
     }
 }
