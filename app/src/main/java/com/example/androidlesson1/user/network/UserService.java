@@ -22,7 +22,7 @@ public class UserService {
                 .writeTimeout(20, TimeUnit.SECONDS)
                 .readTimeout(30, TimeUnit.SECONDS)
                 .addInterceptor(new JWTInterceptor())
-                .addInterceptor(new ConnectivityInterceptor())
+                /*.addInterceptor(new ConnectivityInterceptor())*/
                 .build();
         retrofit = new Retrofit.Builder()
                 .client(okHttpClient)
