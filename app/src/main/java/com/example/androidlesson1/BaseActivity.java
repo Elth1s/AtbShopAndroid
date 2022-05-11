@@ -76,6 +76,10 @@ public class BaseActivity extends AppCompatActivity implements NavigationHost, C
     public boolean onOptionsItemSelected(MenuItem item){
         Intent intent;
         switch (item.getItemId()){
+            case R.id.m_crop:
+                intent = new Intent(this, ChangeImageActivity.class);
+                startActivity(intent);
+                return true;
             case R.id.m_login:
                 intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);

@@ -25,6 +25,8 @@ import com.example.androidlesson1.image.dto.ImageResponseDTO;
 import com.example.androidlesson1.security.JwtSecurityService;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -199,15 +201,13 @@ public class RegisterActivity extends BaseActivity {
     }
     void imageChooser() {
 
-        // create an instance of the
-        // intent of the type image
-        Intent i = new Intent();
-        i.setType("image/*");
-        i.setAction(Intent.ACTION_GET_CONTENT);
-
-        // pass the constant to compare it
-        // with the returned requestCode
-        startActivityForResult(Intent.createChooser(i, "Select Picture"), SELECT_PICTURE);
+        CropImage.activity()
+                .setGuidelines(CropImageView.Guidelines.ON)
+                /*.setCropMenuCropButtonIcon(R.drawable.apply_image_icon)*/
+                .setActivityMenuIconColor(R.color.black)
+                .setActivityTitle("Crop")
+                .setRequestedSize(400, 400)
+                .start(this);
     }
 
     // this function is triggered when user
@@ -215,35 +215,23 @@ public class RegisterActivity extends BaseActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == RESULT_OK) {
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                previewImageView.setImageURI(result.getUri());
 
-            // compare the resultCode with the
-            // SELECT_PICTURE constant
-            if (requestCode == SELECT_PICTURE) {
-                // Get the url of the image from data
-                Uri uri = data.getData();
-                if (null != uri) {
-                    // update the preview image in the layout
-                    previewImageView.setImageURI(uri);
-
-                    Bitmap bitmap= null;
-                    try {
-                        bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),uri);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    // initialize byte stream
-                    ByteArrayOutputStream stream=new ByteArrayOutputStream();
-                    // compress Bitmap
-                    bitmap.compress(Bitmap.CompressFormat.JPEG,100,stream);
-                    // Initialize byte array
-                    byte[] bytes=stream.toByteArray();
-                    // get base64 encoded string
-                    String sImage= Base64.encodeToString(bytes,Base64.DEFAULT);
-
-                    registerDTO.setPhoto(sImage);
-
+                Bitmap bitmap = null;
+                try {
+                    bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), result.getUri());
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                byte[] bytes = stream.toByteArray();
+                String sImage = Base64.encodeToString(bytes, Base64.DEFAULT);
+
+                registerDTO.setPhoto(sImage);
             }
         }
     }
